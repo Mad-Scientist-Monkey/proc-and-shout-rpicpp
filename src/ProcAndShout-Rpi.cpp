@@ -13,6 +13,23 @@ using namespace std;
 #include<arpa/inet.h>	//inet_addr
 #include<string.h>	//strlen
 #include<unistd.h>	//write
+#include<netdb.h>
+
+string get_host_ip(string hostname){
+	struct hostent *host = gethostbyname(hostname.c_str());
+	char* ip_buffer = inet_ntoa(*((struct in_addr*) host->h_addr_list[0]));
+	return ip_buffer;
+}
+
+//string get_host_ip(string hostname = "this"){
+//	char hostbuffer[256];
+//
+//	gethostname(hostbuffer, sizeof(hostbuffer));
+//
+//	struct hostent *host = gethostbyname(hostbuffer);
+//	char* ip_buffer = inet_ntoa(*((struct in_addr*) host->h_addr_list[0]));
+//	return ip_buffer;
+//}
 
 int main() {
 
@@ -26,7 +43,7 @@ int main() {
 	// Prepare the socketaddr_in structure
 	addr_server.sin_family = AF_INET;
 	addr_server.sin_addr.s_addr = INADDR_ANY;
-	addr_server.sin_port = htons (8888);
+	addr_server.sin_port = htons (8889);
 
 	// Bind
 	if (bind(socket_server,(struct sockaddr *)&addr_server, sizeof (addr_server)) < 0){
@@ -54,6 +71,8 @@ int main() {
 
 		cout << "## Connection is accepted from client " << client_ip << ":" <<
 				to_string(client_port) << "." << endl;
+
+		cout << "#####" << get_host_ip("localhost") << endl;
 
 		// Answer back message to client
 		string server_ip = inet_ntoa(addr_server.sin_addr);
