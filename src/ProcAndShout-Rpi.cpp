@@ -10,7 +10,9 @@ using namespace std;
 
 #include<stdio.h>
 #include<sys/socket.h>
-#include<arpa/inet.h>
+#include<arpa/inet.h>	//inet_addr
+#include<string.h>	//strlen
+#include<unistd.h>	//write
 
 int main() {
 
@@ -50,6 +52,13 @@ int main() {
 
 	cout << "## Connection is accepted from client " << client_ip << ":" <<
 			to_string(client_port) << "." << endl;
+
+	// Answer back message to client
+	string server_ip = inet_ntoa(addr_server.sin_addr);
+	int    server_port = ntohs(addr_server.sin_port);
+	string message = "Your connection request to server "+
+			server_ip+":"+to_string(server_port)+" was accepted.";
+	write(socket_client, message.c_str(), message.length());
 
 	return 0;
 }
