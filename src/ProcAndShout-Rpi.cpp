@@ -35,11 +35,11 @@ int main() {
 	listen (socket_server, 3);
 
 	// Accept incoming connection
-	cout << "## Waiting for incoming connections...";
+	cout << "## Waiting for incoming connections..." << endl;
 	int c = sizeof (struct sockaddr_in);
 	socket_client = accept (socket_server, (struct sockaddr *)&addr_client, (socklen_t*)&c);
 	if (socket_client < 0) perror ("## Accept failed.");
-	cout << "Connection accepted." << endl;
+	cout << "## Connection is accepted." << endl;
 
 	return 0;
 }
