@@ -20,7 +20,11 @@ string get_self_ip(){
 	gethostname(hostbuffer, sizeof(hostbuffer));
 
 	struct hostent *host = gethostbyname(hostbuffer);
-	char* ip_buffer = inet_ntoa(*((struct in_addr*) host->h_addr_list[0]));
+	char* ip_buffer;
+	for (int i = 0; host->h_addr_list[i] != NULL; i++){ // Return the first valid
+		ip_buffer = inet_ntoa(*((struct in_addr*) host->h_addr_list[i]));
+	}
+
 	return ip_buffer;
 }
 
@@ -36,7 +40,7 @@ int main() {
 	// Prepare the socketaddr_in structure
 	addr_server.sin_family = AF_INET;
 	addr_server.sin_addr.s_addr = INADDR_ANY;
-	addr_server.sin_port = htons (8888);
+	addr_server.sin_port = htons (8889);
 
 	// Bind
 	if (bind(socket_server,(struct sockaddr *)&addr_server, sizeof (addr_server)) < 0){
@@ -68,7 +72,7 @@ int main() {
 		// Answer back message to client
 		int    server_port = ntohs(addr_server.sin_port);
 		string message = "Your connection request to server "+
-				get_self_ip()+":"+to_string(server_port)+" was been accepted.\n";
+				get_self_ip()+":"+to_string(server_port)+" has been accepted.\n";
 		write(socket_client, message.c_str(), message.length());
 	}
 
