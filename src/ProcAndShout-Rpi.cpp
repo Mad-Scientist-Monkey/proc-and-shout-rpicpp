@@ -32,14 +32,24 @@ int main() {
 	cout << "## Bind is ok." << endl;
 
 	// Listen
+	cout << "## Listening to connections ..." << endl;
 	listen (socket_server, 3);
 
 	// Accept incoming connection
 	cout << "## Waiting for incoming connections..." << endl;
 	int c = sizeof (struct sockaddr_in);
 	socket_client = accept (socket_server, (struct sockaddr *)&addr_client, (socklen_t*)&c);
-	if (socket_client < 0) perror ("## Accept failed.");
-	cout << "## Connection is accepted." << endl;
+	if (socket_client < 0){
+		perror ("## Accept failed. Application will now exit.");
+		return 1;
+	}
+
+	// Get the address from connected client
+	char *client_ip = inet_ntoa(addr_client.sin_addr);
+	int  client_port = ntohs(addr_client.sin_port);
+
+	cout << "## Connection is accepted from client " << client_ip << ":" <<
+			to_string(client_port) << "." << endl;
 
 	return 0;
 }
