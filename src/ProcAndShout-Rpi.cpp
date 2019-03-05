@@ -68,6 +68,15 @@ int main() {
 		string message = "Your connection request to server "+
 				get_hostname()+":"+to_string(server_port)+" has been accepted.\n";
 		write(socket_client, message.c_str(), message.length());
+
+		// Receive messages from the client
+		char client_message[2000];
+		while (true){ // Infinite loop. Ok, terrible, it should be removed. Once connected, it stucks here.
+			if (recv(socket_client, client_message , 2000 , 0) < 0) puts("recv failed");
+			puts("Received from client :: "); puts(client_message);
+			message = "Your message has been received";
+			write(socket_client, message.c_str(), message.length());
+		}
 	}
 
 	return 0;
